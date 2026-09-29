@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Guida di CLAUDIO v5</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root { --pagina:#f2f4f3; --superficie:#fcfcfb; --inchiostro:#0e1a24; --secondario:#4b5863; --filo:#dfe3e2; --accento:#1d5fa8; }
+@media (prefers-color-scheme: dark) { :root { color-scheme: dark; --pagina:#0d1113; --superficie:#161b1e; --inchiostro:#eef2f4; --secondario:#b9c2c9; --filo:#283034; --accento:#6ea8ee; } }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--pagina); color:var(--inchiostro); font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; font-size:15.5px; line-height:1.6; }
+main { max-width: 860px; margin: 0 auto; padding: 28px 20px 64px; }
+h1, h2, h3 { font-family:"IBM Plex Sans Condensed", system-ui, sans-serif; line-height:1.2; text-wrap: balance; }
+h1 { font-size: 40px; margin: 8px 0 4px; } h2 { font-size: 24px; margin-top: 40px; border-top: 1px solid var(--filo); padding-top: 24px; }
+a { color: var(--accento); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; display: block; overflow-x: auto; }
+th, td { border-bottom: 1px solid var(--filo); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { color: var(--secondario); font-weight: 500; }
+code { font-family: "IBM Plex Mono", Consolas, monospace; font-size: 13.5px; background: var(--superficie); border: 1px solid var(--filo); border-radius: 5px; padding: 1px 5px; }
+pre { background: var(--superficie); border: 1px solid var(--filo); border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
+pre code { border: 0; padding: 0; background: none; }
+nav { font-size: 14px; }
+</style>
+</head><body><main><nav><a href="index.html">← Risultati</a> · <a href="guida.html">Guida utente</a> · <a href="manuale.html">Manuale del bot</a></nav><h1>Guida utente di CLAUDIO v5</h1>
+<p>Questa guida serve a orientarsi: cos'è la strategia, cosa fa il bot, da dove vengono i dati, dove
+guardare, cosa fare nei prossimi mesi e se il sistema andrà "ritarato". Per i passaggi tecnici del
+bot (installazione di IB Gateway, comandi) c'è il <strong>manuale del bot</strong> (<code>MANUALE.md</code>).</p>
+<hr />
+<h2>1. In una pagina</h2>
+<ul>
+<li><strong>La strategia</strong> è un portafoglio 60/40 (60% azioni USA, 40% titoli di Stato USA) in ETF, a cui
+  con capitali sopra i 50.000 € si aggiungono i futures (tendenza e momentum su 20 mercati).
+  <strong>Con il tuo capitale (10.000 €) si usa solo il 60/40.</strong></li>
+<li><strong>Il bot</strong> fa tutto da solo: scarica i prezzi, calcola cosa tenere, confronta con il conto,
+  prepara e (quando collegato a IBKR) manda gli ordini, registra tutto e avvisa.</li>
+<li><strong>Oggi</strong> il bot lavora solo su <strong>conti finti</strong> (simulati), ogni sera dopo la chiusura di Wall
+  Street, <strong>sui server di GitHub</strong>: funziona anche a PC spento.</li>
+<li><strong>Il prossimo passo</strong> è il <strong>conto demo di Interactive Brokers</strong> (soldi finti, ordini veri) per
+  3-6 mesi. Solo dopo, se tutto torna, i soldi veri.</li>
+<li><strong>Non va "ritarato"</strong>: le regole sono fisse e volutamente semplici. Si controllano costi, strumenti
+  e software una volta l'anno (sezione 7).</li>
+</ul>
+<hr />
+<h2>2. La strategia</h2>
+<h3>Cosa compra</h3>
+<table>
+<thead>
+<tr>
+<th>Parte</th>
+<th>Cosa</th>
+<th>Con cosa</th>
+<th>Per chi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nucleo</strong></td>
+<td>60% azioni USA (S&amp;P 500), 40% titoli di Stato USA a 7-10 anni</td>
+<td>2 ETF UCITS (CSPX, IBTM), ribilanciati una volta al mese</td>
+<td>tutti</td>
+</tr>
+<tr>
+<td><strong>Futures</strong></td>
+<td>tendenza (segue le direzioni di 1, 3, 6, 12 mesi) e momentum (compra i mercati più forti, vende i più deboli) su 20 mercati: indici azionari, Treasury, oro, argento, petrolio, rame, 6 valute, bitcoin, ether</td>
+<td>futures micro, lunghi o corti</td>
+<td>da ~50.000 € in su</td>
+</tr>
+</tbody>
+</table>
+<h3>Perché dovrebbe funzionare</h3>
+<ul>
+<li><strong>Azioni e obbligazioni</strong> pagano nel lungo periodo un premio per il rischio che si prendono. Il
+  60/40 è la forma più semplice e collaudata di questo principio.</li>
+<li><strong>La tendenza</strong> è uno dei fenomeni più documentati della finanza: i mercati che salgono tendono a
+  continuare a salire per qualche mese, e lo stesso vale per quelli che scendono. È stata osservata
+  su un secolo di dati e su tutti i tipi di mercato. Il suo pregio è guadagnare spesso proprio
+  quando le azioni crollano a lungo (2008, 2022).</li>
+<li><strong>Il machine learning, le reti neurali, gli algoritmi genetici e l'apprendimento per rinforzo</strong>
+  sono stati provati tutti in modo onesto. Trovano qualcosa, ma dopo i costi non fanno meglio delle
+  regole semplici, per questo non sono nel sistema.</li>
+</ul>
+<h3>I numeri (tutti fuori campione, dopo i costi, prima delle tasse)</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>2008-2018</th>
+<th>2019-2026 (verifica, mai vista prima)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sistema completo</td>
+<td>+14,7% l'anno, perdita max −23%</td>
+<td>+14,5% l'anno, perdita max −18%</td>
+</tr>
+<tr>
+<td>60/40 (il tuo)</td>
+<td>+7,7% l'anno, perdita max −29%</td>
+<td>+11,3% l'anno, perdita max −23%</td>
+</tr>
+<tr>
+<td>S&amp;P 500</td>
+<td>+7,2% l'anno, perdita max −52%</td>
+<td>+17,3% l'anno, perdita max −34%</td>
+</tr>
+</tbody>
+</table>
+<p>In euro (per chi vive in Italia, il cambio conta): 2019-2026 il 60/40 ha fatto +11,4% l'anno.</p>
+<h3>Cosa aspettarsi, anche nei periodi brutti</h3>
+<ul>
+<li><strong>Ci saranno anni negativi.</strong> Il 60/40 nel 2022 ha perso il 18%, nel 2008 circa il 20%. Sono
+  normali: fanno parte del premio che si incassa negli anni buoni.</li>
+<li><strong>In certi anni l'S&amp;P 500 farà meglio.</strong> Quando le azioni USA corrono, un portafoglio con il 40% in
+  obbligazioni resta indietro. È il prezzo di cadute più piccole. Il confronto giusto è sul rischio:
+  a parità di rischio il sistema ha fatto meglio dell'S&amp;P 500.</li>
+<li><strong>I numeri passati non sono una promessa.</strong> Il futuro può essere diverso. Il simulatore della
+  pagina dei risultati mostra una gamma di esiti possibili (sfavorevole, mediano, favorevole).</li>
+</ul>
+<hr />
+<h2>3. Il bot</h2>
+<h3>Dove gira</h3>
+<table>
+<thead>
+<tr>
+<th>Conto</th>
+<th>Dove gira</th>
+<th>Quando</th>
+<th>Cosa serve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Simulato 250.000 $</strong> (sistema completo)</td>
+<td>sui server di <strong>GitHub</strong></td>
+<td>ogni sera lun-ven, ~23:30 (22:30 d'estate)</td>
+<td>niente: funziona da solo, anche a PC spento</td>
+</tr>
+<tr>
+<td><strong>Simulato 10.000 €</strong> (il tuo piano)</td>
+<td>sui server di <strong>GitHub</strong></td>
+<td>come sopra</td>
+<td>niente</td>
+</tr>
+<tr>
+<td><strong>Demo IBKR</strong> (quando lo attivi)</td>
+<td>sul <strong>tuo PC</strong></td>
+<td>ogni sera lun-ven alle <strong>22:30</strong></td>
+<td>PC acceso la sera con IB Gateway aperto</td>
+</tr>
+<tr>
+<td><strong>Vero IBKR</strong> (in futuro)</td>
+<td>sul tuo PC</td>
+<td>come il demo</td>
+<td>come il demo, più la tua approvazione degli ordini</td>
+</tr>
+</tbody>
+</table>
+<p>Il conto demo e quello vero girano sul PC perché il bot parla solo con IB Gateway installato sullo
+stesso computer (è anche una protezione: le credenziali non escono mai dal PC). Se la sera il PC è
+spento, il giro parte appena lo accendi. Più avanti si può valutare un piccolo server in affitto
+(circa 5 € al mese) per non dipendere dal PC.</p>
+<h3>Cosa fa ogni sera</h3>
+<ol>
+<li>scarica i prezzi di chiusura dei 45 mercati;</li>
+<li>calcola cosa dovrebbe avere il conto (60/40 e, se il capitale lo consente, i futures);</li>
+<li>controlla il rischio (quanto si potrebbe perdere domani, scenari di crisi, perdita dal massimo);</li>
+<li>confronta con quello che il conto ha già e prepara gli ordini necessari (di solito pochissimi:
+   il 60/40 si ribilancia una volta al mese, e solo se i pesi si sono spostati abbastanza);</li>
+<li>manda gli ordini (conto finto: eseguiti all'apertura del giorno dopo; IBKR: ordini veri);</li>
+<li>scrive tutto nel giornale e avvisa se c'è qualcosa da sapere.</li>
+</ol>
+<h3>Dove guardare</h3>
+<ul>
+<li><strong>Cruscotto</strong> (doppio clic su <code>avvia_cruscotto.cmd</code>): scegli il conto a sinistra. Vedi valore,
+  confronto con S&amp;P 500 e 60/40, posizioni, ordini, rischio, mercati, giornale. Quando lo apri
+  scarica da GitHub l'ultimo stato dei conti simulati.</li>
+<li><strong>GitHub → Actions</strong> (repository <code>claudio-v5</code>): l'elenco dei giri serali; un segno verde = giro
+  riuscito. Se un giro fallisce GitHub ti manda un'email.</li>
+<li><strong>Pagina dei risultati</strong> (https://filippoborioli-ai.github.io/claudio-v5-risultati/): strategia,
+  numeri storici e simulatore.</li>
+</ul>
+<h3>Protezioni</h3>
+<p>File <code>STOP</code> nella cartella del progetto per bloccare gli ordini; futures dimezzati oltre −20% dal
+massimo e chiusi oltre −30%; limite di rischio giornaliero; nessun ordine oltre il 30% del capitale;
+con soldi veri ogni ordine va approvato. Dettagli nel manuale del bot, capitolo 6.</p>
+<hr />
+<h2>4. I dati</h2>
+<table>
+<thead>
+<tr>
+<th>Cosa</th>
+<th>Da dove</th>
+<th>Quando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prezzi giornalieri dei 45 mercati (dividendi compresi)</td>
+<td>Yahoo Finance</td>
+<td>a ogni giro del bot</td>
+</tr>
+<tr>
+<td>Tassi dei titoli di Stato USA</td>
+<td>Tesoro USA (sito ufficiale)</td>
+<td>a ogni giro</td>
+</tr>
+<tr>
+<td>Volatilità (VIX), indici di opzioni</td>
+<td>CBOE</td>
+<td>per la ricerca</td>
+</tr>
+<tr>
+<td>Sentiment delle notizie</td>
+<td>titoli RSS di Yahoo Finance, classificati da un modello di linguaggio (82,7% di titoli classificati bene)</td>
+<td>a ogni giro, solo informativo</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>I dati si aggiornano da soli; non devi scaricare niente.</li>
+<li>Se una fonte non risponde, il giro si annulla e riprova la sera dopo; se i dati sono vecchi di
+  oltre 4 giorni ti arriva un avviso.</li>
+<li><strong>Prezzi nel conto simulato:</strong> per semplicità usa i prezzi degli ETF americani equivalenti (SPY,
+  IEF), quindi il numero di quote non è quello reale degli ETF europei (CSPX, IBTM). Conta il
+  controvalore in dollari. Con IBKR il bot usa i prezzi veri.</li>
+<li>Tutto è in dollari; il simulatore della pagina converte in euro.</li>
+</ul>
+<hr />
+<h2>5. Pagine e file</h2>
+<table>
+<thead>
+<tr>
+<th>Cosa</th>
+<th>Dove</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pagina dei risultati e simulatore</td>
+<td>https://filippoborioli-ai.github.io/claudio-v5-risultati/</td>
+</tr>
+<tr>
+<td>Questa guida</td>
+<td>https://filippoborioli-ai.github.io/claudio-v5-risultati/guida.html</td>
+</tr>
+<tr>
+<td>Manuale del bot</td>
+<td>https://filippoborioli-ai.github.io/claudio-v5-risultati/manuale.html</td>
+</tr>
+<tr>
+<td>Codice (privato)</td>
+<td>https://github.com/filippoborioli-ai/claudio-v5</td>
+</tr>
+<tr>
+<td>Cartella sul PC</td>
+<td><code>Desktop\Cartelle\00_github progetti\progetti\caludio v5</code></td>
+</tr>
+<tr>
+<td>Storia completa del progetto</td>
+<td><code>STORIA.md</code> nella cartella</td>
+</tr>
+</tbody>
+</table>
+<p>Nella cartella: <code>config\</code> impostazioni (le principali in <code>sistema.toml</code>), <code>avvia_cruscotto.cmd</code>,
+<code>avvia_bot.cmd</code>, <code>MANUALE.md</code>, <code>GUIDA_UTENTE.md</code>, <code>STORIA.md</code>. Il resto è codice e dati.</p>
+<hr />
+<h2>6. Cosa fare nei prossimi mesi</h2>
+<table>
+<thead>
+<tr>
+<th>Quando</th>
+<th>Cosa fai tu</th>
+<th>Cosa guardare</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Questa settimana</strong></td>
+<td>niente: i conti simulati girano da soli</td>
+<td>apri il cruscotto ogni tanto e guarda "Simulato 10.000 €"</td>
+</tr>
+<tr>
+<td><strong>Quando il conto IBKR è attivo</strong></td>
+<td>attiva il conto demo e segui il manuale, capitolo 4 (IB Gateway, <code>.env</code>, controllo dei contratti, <code>modo = "carta"</code>). Porta il capitale del demo a 10.000 €</td>
+<td>che il primo giro mandi gli ordini e che vengano eseguiti</td>
+</tr>
+<tr>
+<td><strong>Primo mese di demo</strong></td>
+<td>tieni il PC acceso la sera con IB Gateway aperto (o usa IBC per il login automatico)</td>
+<td>ordini eseguiti, prezzi, commissioni vere, eventuali errori negli avvisi</td>
+</tr>
+<tr>
+<td><strong>Mesi 2-6 di demo</strong></td>
+<td>controllo una volta a settimana</td>
+<td>il demo segue il conto simulato da 10.000 €? le differenze sono piccole (prezzi di esecuzione)?</td>
+</tr>
+<tr>
+<td><strong>Dopo 3-6 mesi coerenti</strong></td>
+<td>decidi se passare ai soldi veri, anche con una parte del capitale</td>
+<td>con soldi veri: <code>CLAUDIO_CONSENTI_REALE=si</code> nel <code>.env</code>, <code>modo = "reale"</code>, e approvi tu ogni lista di ordini</td>
+</tr>
+<tr>
+<td><strong>Ogni mese</strong></td>
+<td>5 minuti nel cruscotto</td>
+<td>valore, confronto con S&amp;P 500 e 60/40, eventuali avvisi</td>
+</tr>
+<tr>
+<td><strong>Ogni anno</strong></td>
+<td>la revisione della sezione 7</td>
+<td>costi, strumenti, tasse, software</td>
+</tr>
+<tr>
+<td><strong>Se il capitale supera ~50.000 €</strong></td>
+<td>niente: il bot passa da solo al sistema completo con i futures</td>
+<td>servono i permessi per i futures nel conto IBKR</td>
+</tr>
+</tbody>
+</table>
+<p>Una cosa da sistemare prima dei soldi veri: se il conto IBKR è in euro, comprare ETF quotati in
+dollari crea un piccolo prestito in dollari. Si risolve convertendo prima gli euro in dollari oppure
+usando le quotazioni in euro degli stessi ETF. Nel demo si vedrà come si comporta.</p>
+<hr />
+<h2>7. Rimarrà così o dovrò ritarare?</h2>
+<p><strong>Le regole non vanno ritarate.</strong> È una scelta voluta: i parametri (i periodi di 1-3-6-12 mesi, il
+60/40, il rischio obiettivo) vengono dalla letteratura e non sono stati "aggiustati" sui dati. Chi
+riottimizza una strategia sugli ultimi anni ottiene quasi sempre un backtest più bello e risultati
+futuri peggiori (è il sovra-adattamento, misurato anche in questo progetto).</p>
+<p><strong>Cosa si adatta da solo, ogni giorno:</strong> le posizioni (seguono i mercati), le stime di volatilità e
+di correlazione (su finestre mobili), la scelta tra 60/40 e sistema completo (in base al capitale),
+i rinnovi dei futures in scadenza.</p>
+<p><strong>Cosa controllare una volta l'anno (revisione annuale, circa un'ora):</strong>
+1. costi e commissioni di IBKR, e che gli ETF usati esistano ancora con costi bassi;
+2. che i futures micro siano ancora quotati (serve solo con il sistema completo);
+3. le regole fiscali italiane (aliquote, compensazioni);
+4. il software: <code>python -m pytest test -q</code> deve dare tutti verdi; aggiornare IB Gateway;
+5. il confronto dell'anno con S&amp;P 500 e 60/40 (normale fare peggio in alcuni anni).</p>
+<p><strong>Quando pensare a un cambiamento:</strong> solo con prove di anni, non dopo un mese o un anno brutto.
+Ogni idea nuova va provata sul conto demo per mesi prima di toccare il conto vero.</p>
+<p><strong>Segnali che qualcosa è rotto (da non confondere con un periodo brutto):</strong> il conto demo o vero si
+allontana molto da quello simulato; giri che falliscono più giorni di fila; ordini rifiutati; dati
+vecchi. In questi casi il problema è tecnico: guardare gli avvisi e il registro (<code>log\</code>).</p>
+<hr />
+<h2>8. Glossario</h2>
+<table>
+<thead>
+<tr>
+<th>Parola</th>
+<th>Significato</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>60/40</strong></td>
+<td>portafoglio con 60% azioni e 40% obbligazioni</td>
+</tr>
+<tr>
+<td><strong>ETF UCITS</strong></td>
+<td>fondo quotato in borsa secondo le regole europee (quello che un privato italiano può comprare)</td>
+</tr>
+<tr>
+<td><strong>Futures micro</strong></td>
+<td>contratti che replicano un mercato (es. S&amp;P 500, oro) con piccolo margine; si può anche scommettere al ribasso</td>
+</tr>
+<tr>
+<td><strong>Tendenza / momentum</strong></td>
+<td>seguire la direzione recente dei prezzi / preferire i mercati più forti</td>
+</tr>
+<tr>
+<td><strong>Rendimento annuo</strong></td>
+<td>di quanto cresce in media il capitale ogni anno</td>
+</tr>
+<tr>
+<td><strong>Perdita massima (drawdown)</strong></td>
+<td>la caduta più grande dal punto più alto al punto più basso</td>
+</tr>
+<tr>
+<td><strong>Sharpe</strong></td>
+<td>rendimento per unità di rischio: più alto è meglio (0,7 buono, 1 molto buono)</td>
+</tr>
+<tr>
+<td><strong>VaR 99%</strong></td>
+<td>la perdita di un giorno che si supera solo 1 volta su 100</td>
+</tr>
+<tr>
+<td><strong>Backtest</strong></td>
+<td>simulazione della strategia sul passato</td>
+</tr>
+<tr>
+<td><strong>Verifica</strong></td>
+<td>backtest su un periodo tenuto da parte e guardato una sola volta, dopo aver fissato le regole</td>
+</tr>
+<tr>
+<td><strong>Conto simulato / demo / vero</strong></td>
+<td>soldi finti senza broker / soldi finti con il broker vero / soldi veri</td>
+</tr>
+<tr>
+<td><strong>IB Gateway</strong></td>
+<td>il programma di Interactive Brokers che fa da ponte tra il bot e il conto</td>
+</tr>
+<tr>
+<td><strong>Rollover</strong></td>
+<td>quando un future sta per scadere il bot lo chiude e apre il successivo</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>9. Domande frequenti</h2>
+<p><strong>Devo tenere il PC acceso?</strong> Per i conti simulati no. Per il conto demo e quello vero sì, la sera
+(con IB Gateway aperto), finché non si passa a un server in affitto.</p>
+<p><strong>Cosa succede se per qualche giorno il bot non gira?</strong> Nulla di grave: al giro successivo recupera.
+Il 60/40 si muove una volta al mese, quindi qualche giorno di ritardo non cambia il risultato.</p>
+<p><strong>Posso cambiare strategia (per esempio 80/20 o solo S&amp;P 500)?</strong> Sì, ma è una scelta di rischio, non
+un miglioramento: più azioni vogliono dire più rendimento atteso e cadute più grandi. Prova le
+alternative nel simulatore della pagina dei risultati prima di decidere.</p>
+<p><strong>Il bot può perdere soldi?</strong> Sì, come qualunque investimento: nel 2022 il 60/40 ha perso il 18%. Il
+bot non evita le perdite di mercato: le rende più piccole di quelle dell'S&amp;P 500 e applica le regole
+con disciplina, senza farsi prendere dal panico.</p>
+<p><strong>Chi decide gli ordini con i soldi veri?</strong> Il bot li prepara, tu li approvi (un codice di 12
+caratteri). Solo se lo scegli esplicitamente nel <code>.env</code> il bot li manda da solo.</p></main></body></html>
