@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Manuale di CLAUDIO v5</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root { --pagina:#f2f4f3; --superficie:#fcfcfb; --inchiostro:#0e1a24; --secondario:#4b5863; --filo:#dfe3e2; --accento:#1d5fa8; }
+@media (prefers-color-scheme: dark) { :root { color-scheme: dark; --pagina:#0d1113; --superficie:#161b1e; --inchiostro:#eef2f4; --secondario:#b9c2c9; --filo:#283034; --accento:#6ea8ee; } }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--pagina); color:var(--inchiostro); font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; font-size:15.5px; line-height:1.6; }
+main { max-width: 860px; margin: 0 auto; padding: 28px 20px 64px; }
+h1, h2, h3 { font-family:"IBM Plex Sans Condensed", system-ui, sans-serif; line-height:1.2; text-wrap: balance; }
+h1 { font-size: 40px; margin: 8px 0 4px; } h2 { font-size: 24px; margin-top: 40px; border-top: 1px solid var(--filo); padding-top: 24px; }
+a { color: var(--accento); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; display: block; overflow-x: auto; }
+th, td { border-bottom: 1px solid var(--filo); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { color: var(--secondario); font-weight: 500; }
+code { font-family: "IBM Plex Mono", Consolas, monospace; font-size: 13.5px; background: var(--superficie); border: 1px solid var(--filo); border-radius: 5px; padding: 1px 5px; }
+pre { background: var(--superficie); border: 1px solid var(--filo); border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
+pre code { border: 0; padding: 0; background: none; }
+nav { font-size: 14px; }
+</style>
+</head><body><main><nav><a href="index.html">← Risultati</a></nav><h1>Manuale del bot CLAUDIO v5</h1>
+<p>Questo manuale spiega, passo per passo, come far girare il bot: cosa fa da solo, cosa devi fare
+tu, come passare dal conto simulato al conto demo di Interactive Brokers e poi al conto vero,
+come controllarlo e cosa fare quando qualcosa non va.</p>
+<hr />
+<h2>1. In due parole</h2>
+<p>Il bot applica ogni giorno feriale un sistema di investimento fatto di due parti:</p>
+<table>
+<thead>
+<tr>
+<th>Parte</th>
+<th>Cosa compra</th>
+<th>Con cosa</th>
+<th>Quanto spesso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nucleo</strong></td>
+<td>60% azioni USA (S&amp;P 500), 40% titoli di Stato USA a 7-10 anni</td>
+<td>ETF UCITS: <strong>CSPX</strong> e <strong>IBTM</strong></td>
+<td>ribilanciamento una volta al mese</td>
+</tr>
+<tr>
+<td><strong>Sovrapposizione</strong></td>
+<td>segue le tendenze e il momentum di 20 mercati, al rialzo o al ribasso</td>
+<td><strong>futures micro</strong> (indici azionari, Treasury, oro, argento, petrolio, rame, valute, bitcoin, ether)</td>
+<td>segnali una volta a settimana</td>
+</tr>
+</tbody>
+</table>
+<p>Il nucleo usa il capitale. I futures richiedono solo un margine (una garanzia) e aggiungono un
+rendimento che di solito va bene quando le azioni vanno male a lungo (nel 2022: +9,7% mentre il
+60/40 perdeva il 18%).</p>
+<p><strong>Risultati sul periodo di verifica 2019-2026</strong> (mai usato per costruire il sistema):
+14,5% l'anno, perdita massima −18%, contro 11,3% e −23% del semplice 60/40. Sono risultati
+simulati, in dollari, prima delle tasse: non garantiscono i rendimenti futuri.</p>
+<p><strong>Capitale consigliato:</strong> almeno 250.000 $ (circa 215.000 €). Con meno i futures micro sono
+"troppo grossi": molte posizioni si arrotonderebbero a zero contratti e il sistema non sarebbe
+più quello verificato. Il nucleo da solo funziona con qualunque capitale.</p>
+<hr />
+<h2>2. Cosa c'è già pronto sul tuo PC</h2>
+<ul>
+<li>Cartella del progetto: <code>Desktop\Cartelle\00_github progetti\progetti\caludio v5</code>.</li>
+<li>Ambiente Python pronto in <code>.venv</code> (non tocca l'Anaconda principale).</li>
+<li><strong>Attività pianificata di Windows "CLAUDIO v5 bot"</strong>: lunedì-venerdì alle <strong>15:45</strong>, 15 minuti
+  dopo l'apertura di Wall Street. Se il PC è spento, parte appena lo accendi.</li>
+<li>Il bot è in modo <strong>simulato</strong>: un conto finto da 250.000 $ con prezzi veri. Nessun soldo,
+  nessun broker. Serve a vederlo lavorare giorno per giorno.</li>
+</ul>
+<p>Per vedere cosa ha fatto: doppio clic su <strong><code>avvia_cruscotto.cmd</code></strong> (si apre il browser su
+http://127.0.0.1:8501, visibile solo dal tuo PC).</p>
+<hr />
+<h2>3. Uso quotidiano</h2>
+<p>Non devi fare niente: il bot parte da solo. Quando vuoi controllare:</p>
+<ol>
+<li>apri il <strong>cruscotto</strong> (<code>avvia_cruscotto.cmd</code>):</li>
+<li><em>Panoramica</em>: valore del conto, perdita dal massimo, VaR, stato dell'ultimo giro;</li>
+<li><em>Posizioni e ordini</em>: cosa tiene il conto e cosa ha comprato o venduto;</li>
+<li><em>Screening dei mercati</em>: tendenza, momentum, volatilità e sentiment delle notizie dei 45 mercati;</li>
+<li><em>Rischio</em>: scenari di crisi applicati alle posizioni di oggi;</li>
+<li><em>Giornale</em>: ogni decisione registrata, con il controllo che nessuno l'abbia modificata;</li>
+<li><em>Ricerca e verifica</em>: i risultati storici del sistema.</li>
+<li>Le <strong>notifiche di Windows</strong> arrivano quando il bot fa ordini, quando un mercato cambia
+   tendenza, quando tocca un limite di rischio o se qualcosa va storto.</li>
+</ol>
+<h3>Comandi utili</h3>
+<p>Aprire il <strong>Prompt dei comandi</strong> nella cartella del progetto e scrivere:</p>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Cosa fa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.venv\Scripts\python -m claudio5 ciclo</code></td>
+<td>un giro del bot adesso (nel modo scelto in configurazione)</td>
+</tr>
+<tr>
+<td><code>.venv\Scripts\python -m claudio5 ciclo --solo-segnali</code></td>
+<td>calcola tutto ma <strong>non manda ordini</strong></td>
+</tr>
+<tr>
+<td><code>.venv\Scripts\python -m claudio5 cruscotto</code></td>
+<td>apre il cruscotto</td>
+</tr>
+<tr>
+<td><code>.venv\Scripts\python -m claudio5 giornale</code></td>
+<td>controlla che il giornale sia integro</td>
+</tr>
+<tr>
+<td><code>.venv\Scripts\python -m claudio5 rapporto</code></td>
+<td>rigenera la pagina dei risultati</td>
+</tr>
+<tr>
+<td><code>.venv\Scripts\python -m claudio5 pubblica</code></td>
+<td>aggiorna la pagina pubblica su GitHub</td>
+</tr>
+</tbody>
+</table>
+<h3>Fermare il bot</h3>
+<ul>
+<li><strong>Subito, senza ordini</strong>: crea nella cartella del progetto un file chiamato <code>STOP</code> (anche vuoto).
+  Finché esiste, il bot non manda ordini. Cancellalo per ripartire.</li>
+<li><strong>Del tutto</strong>: <code>powershell -ExecutionPolicy Bypass -File strumenti\rimuovi_bot.ps1</code> toglie
+  l'attività pianificata. Per rimetterla: <code>strumenti\installa_bot.ps1</code>.</li>
+</ul>
+<hr />
+<h2>4. Passo 1: conto demo di Interactive Brokers (da fare almeno 3-6 mesi)</h2>
+<p>Il conto demo (paper trading) usa soldi finti ma il vero sistema di IBKR: ordini, esecuzioni,
+margini, scadenze dei futures. È il collaudo indispensabile prima dei soldi veri.</p>
+<ol>
+<li><strong>Attiva il conto demo</strong>: nel portale IBKR → Impostazioni → Account → <em>Paper Trading Account</em>.</li>
+<li><strong>Permessi</strong>: nel conto (anche demo) servono i permessi per ETF/azioni sulla borsa di Londra
+   (LSE) e per i <strong>futures</strong> (CME, CBOT, COMEX, NYMEX, EUREX). Si chiedono dal portale.</li>
+<li><strong>Installa IB Gateway</strong> (versione "stable") dal sito di Interactive Brokers e fai login con
+   le credenziali del <strong>conto demo</strong>.</li>
+<li><strong>Configura l'API</strong> in IB Gateway → Configure → Settings → API → Settings:</li>
+<li>"Enable ActiveX and Socket Clients": sì;</li>
+<li>Socket port: <strong>4002</strong>;</li>
+<li>"Allow connections from localhost only": sì (Trusted IPs: 127.0.0.1);</li>
+<li>"Read-Only API": <strong>no</strong> (il bot deve poter mandare ordini).</li>
+<li><strong>Dati di mercato</strong>: senza abbonamenti il bot usa i dati differiti gratuiti; va bene.</li>
+<li><strong>File dei segreti</strong>: copia <code>.env.example</code> e rinominalo <code>.env</code> (resta solo sul tuo PC, non
+   finisce mai su GitHub). La porta è già 4002.</li>
+<li><strong>Verifica i contratti</strong> (con IB Gateway aperto):
+   <code>.venv\Scripts\python -m claudio5 contratti</code>
+   Per ogni strumento IBKR risponde con nome, valuta, scadenza. Se il nome è quello giusto
+   (es. "iShares Core S&amp;P 500 UCITS ETF"), apri <code>config\universo.toml</code> e cambia
+   <code>verificato = false</code> in <code>verificato = true</code> per quel veicolo. <strong>Il bot non opera mai su un
+   veicolo non verificato.</strong> Se un contratto non esiste (possibile per i futures sui rendimenti
+   dei Treasury <code>10Y</code>, <code>30Y</code>, <code>2YY</code>), lascialo non verificato: quel mercato viene saltato.</li>
+<li><strong>Prova senza ordini</strong>, poi con ordini:
+   <code>.venv\Scripts\python -m claudio5 ciclo --modo carta --solo-segnali
+   .venv\Scripts\python -m claudio5 ciclo --modo carta</code></li>
+<li><strong>Metti il bot in automatico sul demo</strong>: in <code>config\sistema.toml</code>, sezione <code>[live]</code>, scrivi
+   <code>modo = "carta"</code>. Da quel giorno l'attività pianificata opera sul conto demo.</li>
+<li><strong>IB Gateway si disconnette ogni giorno.</strong> Per non doverlo riaprire a mano si usa <strong>IBC</strong>
+    (github.com/IbcAlpha/IBC), che avvia il Gateway e fa il login automatico; le credenziali
+    restano nel file di configurazione di IBC sul tuo PC, mai nel bot. In alternativa: apri IB
+    Gateway ogni giorno prima delle 15:45.</li>
+</ol>
+<p><strong>Cosa controllare nei mesi di demo:</strong> che gli ordini vengano eseguiti, che i rollover dei
+futures avvengano prima delle scadenze, che il conto segua più o meno il conto simulato (stesse
+decisioni, differenze solo per prezzi di esecuzione e arrotondamenti).</p>
+<hr />
+<h2>5. Passo 2: conto vero (solo dopo un demo soddisfacente)</h2>
+<ol>
+<li>Nel <code>.env</code>: porta <strong>4001</strong> (IB Gateway conto vero) e la riga <code>CLAUDIO_CONSENTI_REALE=si</code>.</li>
+<li>In <code>config\sistema.toml</code>: <code>modo = "reale"</code>.</li>
+<li><strong>Ogni lista di ordini va approvata da te.</strong> Il bot prepara gli ordini, ti avvisa con la
+   lista e un codice di 12 caratteri (impronta). Per inviarli:
+   <code>.venv\Scripts\python -m claudio5 ciclo --modo reale --approva CODICE</code>
+   Se la lista cambia anche di un solo ordine, il codice cambia e non passa.</li>
+<li><strong>Bot del tutto automatico anche con denaro vero</strong>: aggiungi al <code>.env</code>
+   <code>CLAUDIO_REALE_SENZA_CONFERMA=si</code>. Fallo solo quando il demo ha confermato il sistema e hai
+   capito bene i rischi: da quel momento il bot compra e vende da solo.</li>
+</ol>
+<p>Consiglio: inizia con una parte del capitale, e aumenta solo se il comportamento dal vivo è
+coerente con quello simulato.</p>
+<hr />
+<h2>6. Le protezioni (sempre attive)</h2>
+<table>
+<thead>
+<tr>
+<th>Protezione</th>
+<th>Cosa fa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File <code>STOP</code></td>
+<td>nessun ordine finché esiste</td>
+</tr>
+<tr>
+<td>Perdita dal massimo −20%</td>
+<td>i futures si dimezzano</td>
+</tr>
+<tr>
+<td>Perdita dal massimo −30%</td>
+<td>i futures si chiudono, il bot crea il file STOP e si ferma</td>
+</tr>
+<tr>
+<td>VaR al 99% oltre il 3,5% del capitale</td>
+<td>i futures si riducono finché il rischio rientra</td>
+</tr>
+<tr>
+<td>Ordini</td>
+<td>mai oltre il 30% del capitale per ordine, massimo 80 ordini al giorno, prezzi limite a ±0,5%</td>
+</tr>
+<tr>
+<td>Doppioni</td>
+<td>ogni ordine ha un riferimento con la data: se il bot riparte non lo rimanda</td>
+</tr>
+<tr>
+<td>Dati</td>
+<td>prezzi vecchi di oltre 4 giorni: il giro si annulla; dato sospetto su uno strumento: quello si salta</td>
+</tr>
+<tr>
+<td>Contratti</td>
+<td>solo veicoli verificati, futures sulla scadenza giusta con rollover automatico</td>
+</tr>
+<tr>
+<td>Segreti</td>
+<td>solo nel file <code>.env</code>, mascherati nei registri; il bot si collega solo a IB Gateway sul tuo PC</td>
+</tr>
+<tr>
+<td>Giornale</td>
+<td>ogni evento incatenato con un'impronta SHA-256: una modifica si scopre subito</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>7. Avvisi su telefono (facoltativo)</h2>
+<p>In <code>config\sistema.toml</code>, sezione <code>[avvisi]</code>, la riga <code>canali</code> accetta <code>registro</code>, <code>desktop</code>,
+<code>email</code>, <code>telegram</code>. Per Telegram: crea un bot con @BotFather, scrivigli un messaggio, poi metti
+<code>CLAUDIO_TELEGRAM_TOKEN</code> e <code>CLAUDIO_TELEGRAM_CHAT</code> nel <code>.env</code> e aggiungi <code>"telegram"</code> ai canali.
+Per l'email servono i dati SMTP (per Gmail una "password per le app").</p>
+<hr />
+<h2>8. Quando qualcosa non va</h2>
+<table>
+<thead>
+<tr>
+<th>Problema</th>
+<th>Cosa fare</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Notifica "Dati vecchi"</td>
+<td>Yahoo Finance non ha risposto: il giro successivo riprova. Se dura, controlla la connessione</td>
+</tr>
+<tr>
+<td>"Ordini non inviati: veicolo non verificato"</td>
+<td>esegui <code>claudio5 contratti</code> e verifica il veicolo (punto 4.7)</td>
+</tr>
+<tr>
+<td>Errore di connessione a IBKR</td>
+<td>IB Gateway è chiuso o la porta nel <code>.env</code> è sbagliata (4002 demo, 4001 vero)</td>
+</tr>
+<tr>
+<td>Ordini non eseguiti</td>
+<td>prezzo limite fuori mercato o mercato chiuso: restano validi fino a fine giornata</td>
+</tr>
+<tr>
+<td>Il bot si è fermato da solo</td>
+<td>c'è il file <code>STOP</code>: leggi il motivo dentro il file e nel cruscotto prima di cancellarlo</td>
+</tr>
+<tr>
+<td>Registro dettagliato</td>
+<td><code>log\claudio5.log</code> e <code>log\bot_console.log</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>9. Tasse (Italia, da verificare con un commercialista)</h2>
+<p>Interactive Brokers non trattiene le tasse (non è sostituto d'imposta): i guadagni vanno
+dichiarati da te (quadri RT, RM, RW). I guadagni degli ETF UCITS sono redditi di capitale (26%) e
+non si compensano con le perdite; futures e opzioni producono redditi diversi (26%),
+compensabili con le perdite. Fai i conti prima di usare capitali importanti.</p>
+<hr />
+<h2>10. Avvertenze</h2>
+<p>Il sistema è stato provato con cura su 18 anni di dati, con una verifica su un periodo mai visto,
+ma resta una simulazione: i mercati futuri possono comportarsi diversamente, i futures usano la
+leva e possono perdere più rapidamente degli ETF. Questo non è un consiglio di investimento.</p></main></body></html>
