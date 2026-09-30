@@ -28,8 +28,9 @@ bot (installazione di IB Gateway, comandi) c'è il <strong>manuale del bot</stro
   ETF, a cui con capitali sopra i 50.000 € si aggiungono i futures (tendenza e momentum su 20 mercati).</li>
 <li><strong>Il tuo piano, dal 30/09/2026, è l'80/20</strong> (80% azioni USA, 20% titoli di Stato USA): rende di
   più del 60/40 e cade di più (sezione 9). <strong>Con il tuo capitale (10.000 €) solo gli ETF</strong>; sopra i
-  50.000 € si aggiungerebbero gli stessi futures. L'80/20 è stato scelto dopo la verifica: non è
-  verificato come il 60/40.</li>
+  50.000 € si aggiungerebbero gli stessi futures. L'80/20 è stato scelto dopo la verifica del 60/40
+  e poi <strong>verificato a parte su dati mai usati</strong> (16 paesi, 1870-2020): vedi la domanda "Cosa vuol
+  dire verificato?" nella sezione 9.</li>
 <li><strong>Il bot</strong> fa tutto da solo: scarica i prezzi, calcola cosa tenere, confronta con il conto,
   prepara e (quando collegato a IBKR) manda gli ordini, registra tutto e avvisa.</li>
 <li><strong>Oggi</strong> il bot lavora solo su <strong>conti finti</strong> (simulati), ogni sera dopo la chiusura di Wall
@@ -106,7 +107,7 @@ bot (installazione di IB Gateway, comandi) c'è il <strong>manuale del bot</stro
 </tbody>
 </table>
 <p>In euro (per chi vive in Italia, il cambio conta): 2019-2026 il 60/40 ha fatto +11,4% l'anno.</p>
-<p>Il tuo piano 80/20, rifatto con lo stesso motore (non verificato, scelto dopo), in euro:
+<p>Il tuo piano 80/20, rifatto con lo stesso motore (verificato poi su 16 paesi, sezione 9), in euro:
 2008-2026 +11,3% l'anno con perdita massima −31%, contro +10,0% e −19% del 60/40 e +12,8% e −44%
 dell'S&amp;P 500. Questi tre numeri usano il ribilanciamento corretto del 30/09/2026 (sezione 9): per
 questo il 60/40 qui è un po' sotto la tabella della verifica.</p>
@@ -434,6 +435,19 @@ la scelta più redditizia; altrimenti il 60/40 resta quella più tranquilla. <st
 (<code>config\sistema.toml</code>, <code>[live] nucleo</code>); il conto da 250.000 $ resta sul sistema verificato 60/40.
 Rifatto il confronto con il ribilanciamento corretto (sotto), in euro 2008-26: 80/20 +11,4% contro
 +9,9% del 60/40, perdita massima −31% contro −20%; conclusioni uguali.</p>
+<p><strong>Cosa vuol dire "verificato"? L'80/20 lo è?</strong> Un backtest guardato prima di scegliere è sempre un
+po' ottimista: si sceglie ciò che è andato bene su quei dati, anche per caso. Per questo il 60/40 è
+stato scelto sul 2008-2018 e poi provato una sola volta sul 2019-2026, con criteri scritti prima.
+L'80/20 invece l'abbiamo scelto guardando proprio il 2008-2026 e gli USA dal 1990, quindi quei dati
+non bastano. Il 30/09/2026 è stato verificato allo stesso modo su dati mai usati: regole scritte e
+salvate prima (<code>PROTOCOLLO_80_20.md</code>), 16 paesi dal 1870 al 2020 (Macrohistory Database) e gli USA
+1926-1989, un solo tentativo. <strong>Esito: verificato, tutti e tre i criteri superati.</strong> Rende in media
+<strong>0,5 punti l'anno</strong> in più del 60/40 (al netto dell'inflazione), in 15 paesi su 16 (non in
+Portogallo) e nel 69% dei periodi di 10 anni; il rapporto tra guadagno e rischio (Sharpe) è lo
+stesso. Il prezzo: cadute più profonde (USA 1929-32: −69% contro −53%, al netto dell'inflazione) e
+periodi di 10 anni in perdita reale un po' più frequenti (17% contro 16%). Da notare: il vantaggio
+storico medio (+0,5) è più piccolo di quello del 2008-2026 (+1,5), anni molto buoni per le azioni
+USA. Dettagli in <code>risultati/verifica_80_20/esito.md</code>.</p>
 <p><strong>Cosa è cambiato nel ribilanciamento (30/09/2026)?</strong> Prima la banda si guardava ETF per ETF: poteva
 ricomprare il Treasury senza vendere l'S&amp;P 500 salito (il conto andava un po' a prestito, in media
 il 6% nel 60/40 e il 10% nell'80/20 dei backtest) oppure vendere senza reinvestire (liquidità ferma).
