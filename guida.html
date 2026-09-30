@@ -24,9 +24,12 @@ bot (installazione di IB Gateway, comandi) c'è il <strong>manuale del bot</stro
 <hr />
 <h2>1. In una pagina</h2>
 <ul>
-<li><strong>La strategia</strong> è un portafoglio 60/40 (60% azioni USA, 40% titoli di Stato USA) in ETF, a cui
-  con capitali sopra i 50.000 € si aggiungono i futures (tendenza e momentum su 20 mercati).
-  <strong>Con il tuo capitale (10.000 €) si usa solo il 60/40.</strong></li>
+<li><strong>La strategia verificata</strong> è un portafoglio 60/40 (60% azioni USA, 40% titoli di Stato USA) in
+  ETF, a cui con capitali sopra i 50.000 € si aggiungono i futures (tendenza e momentum su 20 mercati).</li>
+<li><strong>Il tuo piano, dal 30/09/2026, è l'80/20</strong> (80% azioni USA, 20% titoli di Stato USA): rende di
+  più del 60/40 e cade di più (sezione 9). <strong>Con il tuo capitale (10.000 €) solo gli ETF</strong>; sopra i
+  50.000 € si aggiungerebbero gli stessi futures. L'80/20 è stato scelto dopo la verifica: non è
+  verificato come il 60/40.</li>
 <li><strong>Il bot</strong> fa tutto da solo: scarica i prezzi, calcola cosa tenere, confronta con il conto,
   prepara e (quando collegato a IBKR) manda gli ordini, registra tutto e avvisa.</li>
 <li><strong>Oggi</strong> il bot lavora solo su <strong>conti finti</strong> (simulati), ogni sera dopo la chiusura di Wall
@@ -103,10 +106,16 @@ bot (installazione di IB Gateway, comandi) c'è il <strong>manuale del bot</stro
 </tbody>
 </table>
 <p>In euro (per chi vive in Italia, il cambio conta): 2019-2026 il 60/40 ha fatto +11,4% l'anno.</p>
+<p>Il tuo piano 80/20, rifatto con lo stesso motore (non verificato, scelto dopo), in euro:
+2008-2026 +11,3% l'anno con perdita massima −31%, contro +10,0% e −19% del 60/40 e +12,8% e −44%
+dell'S&amp;P 500. Questi tre numeri usano il ribilanciamento corretto del 30/09/2026 (sezione 9): per
+questo il 60/40 qui è un po' sotto la tabella della verifica.</p>
 <h3>Cosa aspettarsi, anche nei periodi brutti</h3>
 <ul>
-<li><strong>Ci saranno anni negativi.</strong> Il 60/40 nel 2022 ha perso il 18%, nel 2008 circa il 20%. Sono
-  normali: fanno parte del premio che si incassa negli anni buoni.</li>
+<li><strong>Ci saranno anni negativi.</strong> Il 60/40 nel 2022 ha perso il 18%, nel 2008 circa il 20%; l'80/20
+  nel 2008 il 27% (dal massimo al minimo il 41% in dollari, il 31% in euro). Sono normali: fanno
+  parte del premio che si incassa negli anni buoni. Con l'80/20 conta ancora di più non vendere
+  durante le cadute.</li>
 <li><strong>In certi anni l'S&amp;P 500 farà meglio.</strong> Quando le azioni USA corrono, un portafoglio con il 40% in
   obbligazioni resta indietro. È il prezzo di cadute più piccole. Il confronto giusto è sul rischio:
   a parità di rischio il sistema ha fatto meglio dell'S&amp;P 500.</li>
@@ -127,13 +136,13 @@ bot (installazione di IB Gateway, comandi) c'è il <strong>manuale del bot</stro
 </thead>
 <tbody>
 <tr>
-<td><strong>Simulato 250.000 $</strong> (sistema completo)</td>
+<td><strong>Simulato 250.000 $</strong> (sistema verificato 60/40 + futures)</td>
 <td>sui server di <strong>GitHub</strong></td>
-<td>ogni sera lun-ven: circa 23:40 con l'ora legale, 22:40 in inverno (a volte GitHub parte in ritardo: ci sono due tentativi di riserva)</td>
+<td>ogni sera lun-ven verso le <strong>22:20</strong> (mezz'ora dopo la chiusura di Wall Street, tutto l'anno; se GitHub ritarda ci sono due tentativi di riserva)</td>
 <td>niente: funziona da solo, anche a PC spento</td>
 </tr>
 <tr>
-<td><strong>Simulato 10.000 €</strong> (il tuo piano)</td>
+<td><strong>Simulato 10.000 €</strong> (il tuo piano, 80/20)</td>
 <td>sui server di <strong>GitHub</strong></td>
 <td>come sopra</td>
 <td>niente</td>
@@ -159,10 +168,12 @@ spento, il giro parte appena lo accendi. Più avanti si può valutare un piccolo
 <h3>Cosa fa ogni sera</h3>
 <ol>
 <li>scarica i prezzi di chiusura dei 45 mercati;</li>
-<li>calcola cosa dovrebbe avere il conto (60/40 e, se il capitale lo consente, i futures);</li>
+<li>calcola cosa dovrebbe avere il conto (80/20 per il tuo conto, 60/40 per quello da 250.000 $, e i
+   futures se il capitale lo consente);</li>
 <li>controlla il rischio (quanto si potrebbe perdere domani, scenari di crisi, perdita dal massimo);</li>
 <li>confronta con quello che il conto ha già e prepara gli ordini necessari (di solito pochissimi:
-   il 60/40 si ribilancia una volta al mese, e solo se i pesi si sono spostati abbastanza);</li>
+   il nucleo si controlla una volta al mese e si ribilancia solo se i pesi si sono spostati abbastanza:
+   allora TUTTI gli ETF tornano ai pesi, così non resta liquidità ferma né si va a prestito);</li>
 <li>manda gli ordini (conto finto: eseguiti all'apertura del giorno dopo; IBKR: ordini veri);</li>
 <li>scrive tutto nel giornale e avvisa se c'è qualcosa da sapere.</li>
 </ol>
@@ -418,13 +429,23 @@ in modo stabile: va bene in un periodo e male nell'altro. Rende di più solo chi
 80/20 ha fatto circa 1-2 punti l'anno in più (in euro 2008-26: 12,7% contro 10,6%) e ha battuto il
 60/40 nell'80% dei periodi di 10 anni dal 1990, ma nel 2008 ha perso il 30% (in euro) e dal 2000 al
 2009 ha reso quasi zero. Se l'orizzonte è di 10 anni o più e non venderesti durante un −30%, 80/20 è
-la scelta più redditizia; altrimenti il 60/40 resta quella più tranquilla.</p>
+la scelta più redditizia; altrimenti il 60/40 resta quella più tranquilla. <strong>Hai scelto l'80/20</strong>
+(30/09/2026): il conto simulato da 10.000 € e il futuro conto IBKR usano 80/20
+(<code>config\sistema.toml</code>, <code>[live] nucleo</code>); il conto da 250.000 $ resta sul sistema verificato 60/40.
+Rifatto il confronto con il ribilanciamento corretto (sotto), in euro 2008-26: 80/20 +11,4% contro
++9,9% del 60/40, perdita massima −31% contro −20%; conclusioni uguali.</p>
+<p><strong>Cosa è cambiato nel ribilanciamento (30/09/2026)?</strong> Prima la banda si guardava ETF per ETF: poteva
+ricomprare il Treasury senza vendere l'S&amp;P 500 salito (il conto andava un po' a prestito, in media
+il 6% nel 60/40 e il 10% nell'80/20 dei backtest) oppure vendere senza reinvestire (liquidità ferma).
+Ora, quando la banda scatta su un ETF, tutti tornano ai pesi. I risultati non dipendono più dal
+giorno di partenza; il 60/40 rende circa 0,4 punti l'anno meno di quanto diceva la verifica, perché
+quel prestito non voluto, negli anni buoni, aiutava.</p>
 <p><strong>Ho premuto "Aggiorna dal cloud" ma non vedo posizioni: è normale?</strong> Sì, nei primi giorni. Il bot
 prepara gli ordini la sera, il conto simulato li esegue all'apertura del giorno di borsa dopo e le
 posizioni compaiono solo dopo il giro serale di quel giorno. Per il conto da 10.000 € aperto il
 29/09: ordini del 29/09, eseguiti all'apertura del 30/09, visibili dopo il giro della sera del 30/09
-(o la mattina del 1/10). Il 60/40 si completa in due giorni, perché nessun ordine supera il 30%
-del capitale.</p>
+(o la mattina del 1/10). Il nucleo si completa in pochi giorni, perché nessun ordine supera il 30%
+del capitale. Nella barra a sinistra il cruscotto scrive quale giro del cloud stai guardando.</p>
 <p><strong>Il bot può perdere soldi?</strong> Sì, come qualunque investimento: nel 2022 il 60/40 ha perso il 18%. Il
 bot non evita le perdite di mercato: le rende più piccole di quelle dell'S&amp;P 500 e applica le regole
 con disciplina, senza farsi prendere dal panico.</p>
