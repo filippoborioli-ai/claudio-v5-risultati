@@ -914,7 +914,9 @@ function simula() {
   const sel = document.getElementById("sim-strategia");
   if (!sel.options.length) {
     Object.entries(S.piani).forEach(([k, v]) => sel.appendChild(h("option", { value: "piano:" + k }, v.nome)));
-    Object.keys(S.serie).forEach(k => sel.appendChild(h("option", { value: k }, `${k}, sempre`)));
+    /* i futures valgono solo sopra la soglia (sotto, i contratti sono troppo grossi): le serie con futures si scelgono
+       solo dai due piani qui sopra, che li aggiungono quando il conto supera 50.000 euro */
+    Object.keys(S.serie).filter(k => !/futures/i.test(k)).forEach(k => sel.appendChild(h("option", { value: k }, `${k}, sempre`)));
   }
   const num = id => Math.max(0, +document.getElementById(id).value || 0);
   const cap = num("sim-capitale"), dep = num("sim-mensile"), costo = num("sim-costo");
