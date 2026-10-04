@@ -78,6 +78,9 @@ più quello verificato. Il nucleo da solo funziona con qualunque capitale.</p>
   conto demo e per quello vero di IBKR, che devono girare sul PC dove è aperto IB Gateway. Finché il
   modo è "simulato" sul PC non fa nulla (la simulazione è nel cloud). Se il PC è spento, parte appena
   lo accendi.</li>
+<li>Un quarto conto, <strong>"80/20 + futures"</strong> (250.000 $, solo osservazione, fuori dal collaudo): serve a vedere in avanti
+  la combinazione. La prova sulla storia ha dato 5 criteri su 6 (Sharpe 2019-26 +0,08 contro una soglia di +0,10, perdite molto ridotte):
+  adottata per scelta in deroga (<code>PROTOCOLLO_80_20_FUTURES.md</code> §7); la prova in avanti si valuta dopo 6 mesi.</li>
 <li>Un terzo conto, <strong>"tesi"</strong> (esperimento, solo simulato, sempre nel cloud): un modello linguistico (OpenAI,
   chiave nel secret <code>OPENAI_API_KEY</code> del repository e nel file <code>.env</code>) legge ogni sera prezzi e notizie e sceglie
   quali ETF settoriali e tematici tenere, spiegando il ragionamento. Non ha un backtest possibile: si giudica
