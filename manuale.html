@@ -71,24 +71,24 @@ più quello verificato. Il nucleo da solo funziona con qualunque capitale.</p>
 <li><strong>Conti simulati nel cloud:</strong> ogni sera dal lunedì al venerdì, dopo la chiusura di Wall Street
   (verso le 22:20 italiane tutto l'anno; GitHub a volte parte con ore di ritardo, per questo ci sono
   tentativi di riserva più tardi la sera e la mattina dopo, che non fanno nulla se il giro è già
-  stato fatto), <strong>GitHub Actions</strong> fa un giro del bot sui due conti finti e salva lo
+  stato fatto), <strong>GitHub Actions</strong> fa un giro del bot sui conti finti e salva lo
   stato nel ramo <code>simulazione</code> del repository. Funziona anche a PC spento. Lo vedi nella scheda
   <em>Actions</em> del repository (segno verde = riuscito; se fallisce arriva un'email).</li>
 <li><strong>Attività pianificata di Windows "CLAUDIO v5 bot"</strong>: lunedì-venerdì alle <strong>22:30</strong>. Serve per il
   conto demo e per quello vero di IBKR, che devono girare sul PC dove è aperto IB Gateway. Finché il
   modo è "simulato" sul PC non fa nulla (la simulazione è nel cloud). Se il PC è spento, parte appena
   lo accendi.</li>
-<li>Un quarto conto, <strong>"80/20 + futures"</strong> (250.000 $, solo osservazione, fuori dal collaudo): serve a vedere in avanti
-  la combinazione. La prova sulla storia ha dato 5 criteri su 6 (Sharpe 2019-26 +0,08 contro una soglia di +0,10, perdite molto ridotte):
-  adottata per scelta in deroga (<code>PROTOCOLLO_80_20_FUTURES.md</code> §7); la prova in avanti si valuta dopo 6 mesi.</li>
-<li>Un terzo conto, <strong>"tesi"</strong> (esperimento, solo simulato, sempre nel cloud): un modello linguistico (OpenAI,
-  chiave nel secret <code>OPENAI_API_KEY</code> del repository e nel file <code>.env</code>) legge ogni sera prezzi e notizie e sceglie
-  quali ETF settoriali e tematici tenere, spiegando il ragionamento. Non ha un backtest possibile: si giudica
-  andando avanti nel tempo, dopo almeno 12 mesi. Dettagli in <code>CLAUDE.md</code> (sezione "Conto tesi").</li>
-<li>Il bot è in modo <strong>simulato</strong> con <strong>due conti finti</strong> e prezzi veri (nessun soldo, nessun broker):</li>
+<li>Il bot è in modo <strong>simulato</strong> con <strong>quattro conti finti</strong> e prezzi veri (nessun soldo, nessun broker); li scegli nel
+  cruscotto, a sinistra:</li>
 <li>"Simulato 250.000 $": il sistema verificato (60/40 + futures);</li>
-<li>"Simulato 10.000 €": il tuo piano reale, <strong>80/20</strong> in ETF (dal 30/09/2026). Li scegli nel
-    cruscotto, a sinistra.</li>
+<li>"Simulato 10.000 €": il tuo piano reale, <strong>80/20</strong> in ETF (dal 30/09/2026);</li>
+<li>"Simulato 250.000 $ (80/20 + futures, osservazione)": la combinazione adottata in deroga. La prova sulla storia ha
+    dato 5 criteri su 6 (Sharpe 2019-26 +0,08 contro una soglia di +0,10, perdite molto ridotte) e la prova all'indietro
+    2000-07 non l'ha confermata (<code>PROTOCOLLO_80_20_FUTURES.md</code> §7). Fuori dal collaudo; si valuta dopo il 05/04/2027;</li>
+<li><strong>"tesi"</strong> (esperimento, scheda <em>Tesi (AI)</em>): un modello linguistico (OpenAI, chiave nel secret <code>OPENAI_API_KEY</code> del
+    repository e nel file <code>.env</code>) legge ogni sera prezzi e notizie e sceglie quali ETF settoriali e tematici tenere,
+    spiegando il ragionamento. Non ha un backtest possibile: si giudica andando avanti, dopo almeno 12 mesi. Dettagli in
+    <code>CLAUDE.md</code> (sezione "Conto tesi").</li>
 <li><strong>Nucleo:</strong> <code>config\sistema.toml</code>, sezione <code>[live]</code>, <code>nucleo = { SPY = 0.8, IEF = 0.2 }</code> è il tuo
   piano (vale per il conto IBKR demo e vero e per il conto simulato da 10.000 €); la sezione
   <code>[live.nucleo_conti]</code> tiene il conto simulato da 250.000 $ sul 60/40 verificato.</li>
@@ -200,7 +200,7 @@ margini, scadenze dei futures. È il collaudo indispensabile prima dei soldi ver
 <li><strong>IB Gateway si disconnette ogni giorno.</strong> Per non doverlo riaprire a mano si usa <strong>IBC</strong>
     (github.com/IbcAlpha/IBC), che avvia il Gateway e fa il login automatico; le credenziali
     restano nel file di configurazione di IBC sul tuo PC, mai nel bot. In alternativa: apri IB
-    Gateway ogni giorno prima delle 15:45.</li>
+    Gateway ogni giorno prima delle 22:30.</li>
 </ol>
 <p><strong>Cosa controllare nei mesi di demo:</strong> che gli ordini vengano eseguiti, che i rollover dei
 futures avvengano prima delle scadenze, che il conto segua più o meno il conto simulato (stesse
