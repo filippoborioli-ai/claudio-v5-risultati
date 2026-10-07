@@ -327,4 +327,21 @@ compensabili con le perdite. Fai i conti prima di usare capitali importanti.</p>
 <h2>10. Avvertenze</h2>
 <p>Il sistema è stato provato con cura su 18 anni di dati, con una verifica su un periodo mai visto,
 ma resta una simulazione: i mercati futuri possono comportarsi diversamente, i futures usano la
-leva e possono perdere più rapidamente degli ETF. Questo non è un consiglio di investimento.</p></main></body></html>
+leva e possono perdere più rapidamente degli ETF. Questo non è un consiglio di investimento.</p>
+<hr />
+<h2>11. Alternativa senza Interactive Brokers: il foglio Excel</h2>
+<p>Sotto circa 50.000 € i futures non servono e il piano è solo il nucleo in ETF (per esempio 80/20): basta guardare il portafoglio una
+volta al mese e investire il versamento. Per questo c'è un foglio Excel, <code>excel\Ribilanciamento_mensile.xlsx</code>, utilizzabile con
+qualunque broker (per esempio Trade Republic): <strong>non manda ordini</strong>, dice cosa comprare.</p>
+<p><strong>Come funziona</strong>
+- Nel foglio <em>Operazioni</em> si registrano le quote comprate (come da conferma del broker); nel foglio <em>Ribilancia</em> si scrive il
+  versamento del mese. I prezzi si leggono da Yahoo Finance all'apertura (Excel per Windows); se non si caricano si scrivono a mano.
+- Il versamento va agli ETF più sotto peso, <strong>senza vendere</strong> (vendere in guadagno costa tasse e commissioni). Solo se lo scostamento
+  resta oltre la soglia (5 punti) il foglio segnala di valutare una vendita e dice quanto.
+- Pesi e ETF si cambiano nelle celle gialle. Il piano predefinito è 80% azioni mondiali (iShares Core MSCI World) e 20% Treasury USA
+  7-10 anni, con linee quotate in euro.</p>
+<p><strong>Da verificare con il broker</strong> (non dipende dal foglio): che gli ETF scelti siano acquistabili, versione ad accumulazione o a
+distribuzione, costi per ordine e per piano di accumulo, quote frazionarie, come vengono gestite le tasse in Italia. Il Treasury USA ha
+rischio di cambio contro l'euro; il progetto lo ha provato solo con Treasury USA.</p>
+<p><strong>Il bot nel cloud</strong> continua a girare in simulazione: serve a confrontare strategie e, se un giorno il capitale supera i ~50.000 €,
+a decidere se passare a IBKR. Il foglio Excel e il collaudo di un mese sono indipendenti.</p></main></body></html>
